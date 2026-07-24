@@ -1,7 +1,5 @@
-// ВСТАВТЕ СЮДИ ВАШЕ ПОСИЛАННЯ НА CSV
+// Посилання на ваш CSV
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQFnpl_W78r6T8lrNKLUuBHsRKjO3j5pkEeNSdR-T0phYKRqVoAz4n_gsBCJjJ2uSn1BnHYZAN-IgAa/pub?output=csv';
-
-const DISPLAY_TIME = 8000; 
 
 const MONTHS_UK = [
     "СІЧНЯ", "ЛЮТОГО", "БЕРЕЗНЯ", "КВІТНЯ", "ТРАВНЯ", "ЧЕРВНЯ", 
@@ -22,18 +20,6 @@ function updateHeaderDate() {
     document.getElementById('current-date').textContent = `${day} ${month}, ${weekDay}`;
 }
 
-function skipToNextInYodeck() {
-    console.log("Відправляємо команду на перемикання плейлиста...");
-    
-    // Спроба 1: Стандартна команда закриття (найчастіше працює в signage-плеєрах)
-    window.close();
-    
-    // Спроба 2: Якщо Yodeck експортує свій API у вікно
-    if (typeof yodeck !== 'undefined' && yodeck.next) {
-        yodeck.next();
-    }
-}
-
 async function initWidget() {
     try {
         updateHeaderDate();
@@ -41,28 +27,23 @@ async function initWidget() {
         const response = await fetch(CSV_URL);
         const csvText = await response.text();
         
-        // Перетворюємо CSV текст у масив об'єктів
         const allPeople = parseCSV(csvText);
         console.log("Усі дані з таблиці:", allPeople);
         
         const today = new Date();
         
-        // Гнучкий фільтр, який розуміє будь-які формати дати
+        // Гнучкий фільтр на сьогоднішню дату
         const birthdaysToday = allPeople.filter(person => {
-            // На всякий випадок враховуємо різні варіанти назви колонки
             let dateVal = person.date || person.Date || person['дата'] || person['Дата'];
             if (!dateVal) return false;
             
             let d = dateVal.trim();
-            
-            // Розбиваємо дату за крапкою, слешем або дефісом
             let parts = d.split(/[\.\-\/]/);
             
             if (parts.length >= 2) {
                 let p1 = parseInt(parts[0], 10);
                 let p2 = parseInt(parts[1], 10);
                 
-                // Перевіряємо обидва варіанти, бо Google Таблиці часто міняють день і місяць місцями
                 let isDayFirst = (p1 === today.getDate() && p2 === (today.getMonth() + 1));
                 let isMonthFirst = (p2 === today.getDate() && p1 === (today.getMonth() + 1));
                 
@@ -71,16 +52,14 @@ async function initWidget() {
             return false;
         });
         
-        // ВИПРАВЛЕНИЙ РЯДОК:
         console.log("Знайдено іменинників на сьогодні:", birthdaysToday);
 
         if (birthdaysToday.length > 0) {
             startLoop(birthdaysToday);
         } else {
-            // Якщо іменинників немає — миттєво ховаємо віджет і йдемо далі
-            console.log("Сьогодні немає іменинників. Пропускаємо віджет.");
-            document.body.style.display = 'none'; 
-            skipToNextInYodeck(); // <--- КОМАНДА ПЛЕЄРУ
+            console.log("Сьогодні немає іменинників у таблиці.");
+            document.querySelector('.title').innerHTML = "СЬОГОДНІ НЕМАЄ<br>ІМЕНИННИКІВ";
+            // Якщо немає іменинників, ховаємо вміст або залишаємо заголовок на хвилину
         }
     } catch (error) {
         console.error("Помилка завантаження даних:", error);
@@ -106,7 +85,6 @@ function parseCSV(text) {
 }
 
 function getRank(person) {
-    // Перевіряємо ключ колонки D (якщо заголовки в таблиці "rank", "звання" або літера "d")
     if (person.d && person.d.trim() !== '') return person.d;
     if (person.rank && person.rank.trim() !== '') return person.rank;
     if (person['звання'] && person['звання'].trim() !== '') return person['звання'];
@@ -182,45 +160,40 @@ function startLoop(people) {
     renderPositions();
 
     if (totalCards > 0) {
-        // Зберігаємо ID інтервалу, щоб потім його зупинити
+        // ВИРАХОВУЄМО ДИНАМІЧНИЙ ЧАС: суворо 60 секунд (60000 мс) на всю стопку
+        const totalDurationMs = 60000;
+        const intervalTime = totalDurationMs / totalCards;
+        
+        console.log(`Загальна кількість карток: ${totalCards}. Час показу однієї: ${intervalTime / 1000} сек.`);
+
+        let currentIndex = 0;
+
         let intervalId = setInterval(() => {
-            
-            // Якщо карток більше немає, зупиняємо таймер
-            if (cardElements.length === 0) {
+            // Коли пройшли всі картки — зупиняємо інтервал
+            if (currentIndex >= totalCards) {
                 clearInterval(intervalId);
                 return;
             }
 
             const topCard = cardElements[0];
             
-            // Запуск анімації вильоту вправо
+            // Запуск анімації вильоту праворуч (триває 1.5 секунди для плавності)
+            topCard.style.transition = 'transform 1.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.5s ease';
             topCard.style.transform = `translate(2000px, 0px)`;
             topCard.style.opacity = 0; 
             
-            // Через 2 секунди остаточно видаляємо картку
             setTimeout(() => {
                 cardElements.shift(); 
                 topCard.remove(); 
                 
                 if (cardElements.length > 0) {
                     renderPositions();
-                } else {
-                    clearInterval(intervalId);
-                    
-                    console.log("Показ карток завершено. Ховаємо віджет.");
-                    document.body.style.transition = 'opacity 1s ease';
-                    document.body.style.opacity = '0';
-                    
-                    // Після завершення анімації командуємо йти далі
-                    setTimeout(() => {
-                        document.body.style.display = 'none';
-                        skipToNextInYodeck(); // <--- КОМАНДА ПЛЕЄРУ
-                    }, 1000);
                 }
-            }, 2000);
+            }, 1500); 
 
-        }, 12000);
+            currentIndex++;
+        }, intervalTime);
     }
-} // <--- Саме цієї дужки у вас не вистачало!
+}
 
 document.addEventListener("DOMContentLoaded", initWidget);
