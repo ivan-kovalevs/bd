@@ -1,0 +1,241 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('fonts/UAFSans-Regular.otf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('fonts/UAFSans-Bold.otf') format('truetype');
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('fonts/UAFSans-Bold.otf') format('truetype');
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('fonts/UAFSans-Bold.otf') format('truetype');
+    font-weight: 900;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #555A3C;
+    /* Оливковий фон */
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-image: linear-gradient(135deg, #5b6241 0%, #44482f 100%);
+}
+
+#widget-container {
+    position: relative;
+    width: 100%;
+    max-width: 1920px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 100px;
+    transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Анімація появи / зникнення усього віджета */
+.hidden {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* ==== ХІДЕР (ДАТА І ЗАГОЛОВОК) ==== */
+.header {
+    position: absolute;
+    top: 100px;
+    left: 89px;
+    z-index: 10;
+}
+
+.date-header {
+    font-size: 64px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.title {
+    font-size: 78px;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.1;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ==== ЛОГОТИП ==== */
+.logo-wrapper {
+    position: absolute;
+    top: 80px;
+    right: 100px;
+    width: 140px;
+    height: 180px;
+    z-index: 10;
+}
+
+.logo-placeholder {
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    border-radius: 10px 10px 50% 50% / 10px 10px 40% 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.logo-placeholder br {
+    display: block;
+}
+
+/* ==== КАРТКА ==== */
+.cards-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1603px;
+    height: 649px;
+    /* Виставляємо відступ зверху 220px, а з правого боку — 89px (або потрібне значення) */
+    margin: 220px 89px 0 auto; 
+    perspective: 1000px;
+}
+
+.main-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #dfdfdf;
+    border-radius: 40px;
+    display: flex;
+    align-items: center; 
+    padding: 34px; /* <--- ЗМІНИЛИ З 25px НА 34px (відступ по периметру) */
+    box-sizing: border-box;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1), opacity 2s ease, filter 2s ease;
+}
+
+/* ==== КОНТЕЙНЕР ФОТО ==== */
+.photo-container {
+    position: relative;
+    width: 437px;
+    height: 581px;
+    border-radius: 32px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: #000000;
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); /* Легке затемнення фото, якщо потрібно */
+    z-index: 1;
+}
+
+.photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    position: relative;
+    z-index: 0;
+}
+
+/* ==== ІНФОРМАЦІЯ ==== */
+.info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-grow: 1;
+    height: 100%;
+    padding-left: 77px;      
+    padding-right: 25px;
+    box-sizing: border-box;
+}
+
+/* ==== РЯДОК ЗІ ЗВАННЯМ ТА ІКОНКОЮ ==== */
+.rank-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 26px;           /* Звання залишається одразу під верхнім падінгом картки */
+}
+
+/* Звання */
+.rank {
+    font-family: 'Montserrat'; /* Замініть на ваш шрифт, якщо використовується кастомний */
+    font-size: 64px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6d6d6d; /* Сірий колір звання */
+    letter-spacing: 0.5px;
+}
+
+/* ==== ТРИЗУБ / ІКОНКА ПРАВОРУЧ ==== */
+.trident-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.trident-icon img {
+    width: 67px;    /* Точна ширина іконки (можете змінити за потреби) */
+    height: auto;   /* Зберігає ідеальні пропорції svg без спотворень */
+    display: block;
+}
+
+/* ==== ІМЯ ІМЕНИННИКА ==== */
+.name {
+    font-family: 'Montserrat';
+    font-size: 88px;
+    font-weight: 800;
+    line-height: 1.06;
+    color: #111111;
+    text-transform: uppercase;
+    word-break: break-word;
+    /* 
+      Загальний відступ картки зверху = 34px. 
+      Щоб від самого верху картки до імені було рівно 235px, 
+      потрібен відступ від звання (або внутрішній відступ) 201px (235 - 34 = 201).
+    */
+    margin-top: 77px;        
+}
