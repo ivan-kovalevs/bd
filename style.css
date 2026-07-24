@@ -1,3 +1,20 @@
+/* ==== БАЗОВІ НАЛАШТУВАННЯ ЕКРАНА ==== */
+body {
+    margin: 0;
+    padding: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: top left;
+    background-color: #555A3C;
+    background-image: linear-gradient(135deg, #5b6241 0%, #44482f 100%);
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @font-face {
     font-family: 'Montserrat';
     src: url('fonts/UAFSans-Regular.otf') format('truetype');
@@ -26,26 +43,11 @@
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #555A3C;
-    /* Оливковий фон */
-    color: #ffffff;
-    font-family: 'Montserrat', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    background-image: linear-gradient(135deg, #5b6241 0%, #44482f 100%);
-}
-
 #widget-container {
     position: relative;
     width: 100%;
     max-width: 1920px;
-    height: 100vh;
+    height: 1080px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -127,7 +129,6 @@ body {
     width: 100%;
     max-width: 1603px;
     height: 649px;
-    /* Виставляємо відступ зверху 220px, а з правого боку — 89px (або потрібне значення) */
     margin: 220px 89px 0 auto; 
     perspective: 1000px;
 }
@@ -138,11 +139,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #dfdfdf;
+    background-color: #D1D1D1;
     border-radius: 40px;
     display: flex;
     align-items: center; 
-    padding: 34px; /* <--- ЗМІНИЛИ З 25px НА 34px (відступ по периметру) */
+    padding: 34px;
     box-sizing: border-box;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: transform 2s cubic-bezier(0.25, 1, 0.5, 1), opacity 2s ease, filter 2s ease;
@@ -165,7 +166,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.2); /* Легке затемнення фото, якщо потрібно */
+    background-color: rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
@@ -185,7 +186,7 @@ body {
     justify-content: flex-start;
     flex-grow: 1;
     height: 100%;
-    padding-left: 77px;      
+    padding-left: 77px;     
     padding-right: 25px;
     box-sizing: border-box;
 }
@@ -196,16 +197,16 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-top: 26px;           /* Звання залишається одразу під верхнім падінгом картки */
+    margin-top: 26px;
 }
 
 /* Звання */
 .rank {
-    font-family: 'Montserrat'; /* Замініть на ваш шрифт, якщо використовується кастомний */
+    font-family: 'Montserrat';
     font-size: 64px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #6d6d6d; /* Сірий колір звання */
+    color: #6d6d6d;
     letter-spacing: 0.5px;
 }
 
@@ -218,8 +219,8 @@ body {
 }
 
 .trident-icon img {
-    width: 67px;    /* Точна ширина іконки (можете змінити за потреби) */
-    height: auto;   /* Зберігає ідеальні пропорції svg без спотворень */
+    width: 67px;
+    height: auto;
     display: block;
 }
 
@@ -232,10 +233,5 @@ body {
     color: #111111;
     text-transform: uppercase;
     word-break: break-word;
-    /* 
-      Загальний відступ картки зверху = 34px. 
-      Щоб від самого верху картки до імені було рівно 235px, 
-      потрібен відступ від звання (або внутрішній відступ) 201px (235 - 34 = 201).
-    */
     margin-top: 77px;        
 }
