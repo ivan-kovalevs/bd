@@ -116,6 +116,8 @@ function getRank(person) {
 }
 
 // Основна функція для циклічної зміни іменинників
+// Основна функція для циклічної зміни іменинників
+// Основна функція для циклічної зміни іменинників
 function startLoop(people) {
     const wrapper = document.getElementById('cards-wrapper');
     wrapper.innerHTML = '';
@@ -164,39 +166,34 @@ function startLoop(people) {
         cardElements.push(el);
     });
 
-    // Фізично відображає поточні координати усіх об'єктів у масиві
-// Фізично відображає поточні координати усіх об'єктів у масиві
-function renderPositions() {
-    cardElements.forEach((el, index) => {
-        el.style.zIndex = totalCards - index;
-        el.style.opacity = 1;
-        
-        let xOffset = index * -18;
-        let yOffset = index * 18;
-        
-        // Зменшуємо крок з 0.1 до 0.04, щоб перехід був м'якішим, 
-        // а мінімальну яскравість тримаємо на рівні 0.4 для гарної глибини
-        let brightness = Math.max(1 - (index * 0.04), 0.4); 
-        
-        el.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-        el.style.filter = `brightness(${brightness})`;
-    });
-}
+    function renderPositions() {
+        cardElements.forEach((el, index) => {
+            el.style.zIndex = totalCards - index;
+            el.style.opacity = 1;
+            
+            let xOffset = index * -18;
+            let yOffset = index * 18;
+            
+            let brightness = Math.max(1 - (index * 0.04), 0.4); 
+            
+            el.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            el.style.filter = `brightness(${brightness})`;
+        });
+    }
 
-    // Перший рендер
     renderPositions();
 
     if (totalCards > 0) {
-        // ВИРАХОВУЄМО ДИНАМІЧНИЙ ЧАС: суворо 60 секунд (60000 мс) на всю стопку
-        const totalDurationMs = 60000;
-        const intervalTime = totalDurationMs / totalCards;
+        // Виділяємо на анімацію вильоту останньої картки 2 секунди, 
+        // тому весь цикл карток має завершитися за 58 секунд, щоб разом із вильотом вийшло рівно 60 сек.
+        const targetTotalTimeMs = 58000; 
+        const intervalTime = targetTotalTimeMs / totalCards;
         
         console.log(`Загальна кількість карток: ${totalCards}. Час показу однієї: ${intervalTime / 1000} сек.`);
 
         let currentIndex = 0;
 
         let intervalId = setInterval(() => {
-            // Коли пройшли всі картки — зупиняємо інтервал
             if (currentIndex >= totalCards) {
                 clearInterval(intervalId);
                 return;
@@ -204,8 +201,8 @@ function renderPositions() {
 
             const topCard = cardElements[0];
             
-            // Запуск анімації вильоту праворуч (триває 1.5 секунди для плавності)
-            topCard.style.transition = 'transform 1.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.5s ease';
+            // Запуск анімації вильоту праворуч (триває 2 секунди)
+            topCard.style.transition = 'transform 2s cubic-bezier(0.25, 1, 0.5, 1), opacity 2s ease, filter 2s ease';
             topCard.style.transform = `translate(2000px, 0px)`;
             topCard.style.opacity = 0; 
             
@@ -216,7 +213,7 @@ function renderPositions() {
                 if (cardElements.length > 0) {
                     renderPositions();
                 }
-            }, 1500); 
+            }, 2000); 
 
             currentIndex++;
         }, intervalTime);
