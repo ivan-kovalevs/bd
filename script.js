@@ -1,3 +1,27 @@
+function scaleToFit() {
+    const baseWidth = 1920;
+    const baseHeight = 1080;
+    
+    const scaleX = window.innerWidth / baseWidth;
+    const scaleY = window.innerHeight / baseHeight;
+    const scale = Math.min(scaleX, scaleY);
+    
+    // Застосовуємо масштаб до всього body
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.transformOrigin = 'top left';
+    
+    // Центруємо екран по горизонталі та вертикалі
+    const extraX = (window.innerWidth - (baseWidth * scale)) / 2;
+    const extraY = (window.innerHeight - (baseHeight * scale)) / 2;
+    
+    document.body.style.position = 'absolute';
+    document.body.style.left = `${extraX}px`;
+    document.body.style.top = `${extraY}px`;
+}
+
+window.addEventListener('resize', scaleToFit);
+document.addEventListener('DOMContentLoaded', scaleToFit);
+
 // Посилання на ваш CSV
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQFnpl_W78r6T8lrNKLUuBHsRKjO3j5pkEeNSdR-T0phYKRqVoAz4n_gsBCJjJ2uSn1BnHYZAN-IgAa/pub?output=csv';
 
@@ -141,20 +165,23 @@ function startLoop(people) {
     });
 
     // Фізично відображає поточні координати усіх об'єктів у масиві
-    function renderPositions() {
-        cardElements.forEach((el, index) => {
-            el.style.zIndex = totalCards - index;
-            el.style.opacity = 1;
-            
-            let xOffset = index * -18;
-            let yOffset = index * 18;
-            
-            let brightness = 1 - (index * 0.1); 
-            
-            el.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            el.style.filter = `brightness(${brightness})`;
-        });
-    }
+// Фізично відображає поточні координати усіх об'єктів у масиві
+function renderPositions() {
+    cardElements.forEach((el, index) => {
+        el.style.zIndex = totalCards - index;
+        el.style.opacity = 1;
+        
+        let xOffset = index * -18;
+        let yOffset = index * 18;
+        
+        // Зменшуємо крок з 0.1 до 0.04, щоб перехід був м'якішим, 
+        // а мінімальну яскравість тримаємо на рівні 0.4 для гарної глибини
+        let brightness = Math.max(1 - (index * 0.04), 0.4); 
+        
+        el.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+        el.style.filter = `brightness(${brightness})`;
+    });
+}
 
     // Перший рендер
     renderPositions();
